@@ -1,4 +1,6 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
 
 const modelCart = {
   id: 1,
@@ -11,10 +13,11 @@ const modelCart = {
 };
 
 @Injectable()
-export class OrdersService {
+export class OrderService {
   private orders: any[] = [];
 
-  placeOrder(cartId: number) {
+  create(createOrderDto: CreateOrderDto) {
+    const cartId = (createOrderDto as any).cartId;
     const cart = modelCart;
     if (!cart || cart.id !== cartId) {
       throw new NotFoundException(`Cart with id ${cartId} not found`);
@@ -56,24 +59,35 @@ export class OrdersService {
     return createdOrders;
   }
 
-  getOrderById(id: number) {
+  findAll() {
+    return this.orders;
+  }
+
+  findOne(id: number) {
     const order = this.orders.find((o) => o.id === id);
     if (!order) throw new NotFoundException(`Order with id ${id} not found`);
     return order;
   }
 
-  getBuyerOrders(buyerId: number) {
+  findByBuyer(buyerId: number) {
     return this.orders.filter((o) => o.buyerId === buyerId);
   }
 
-  getSellerOrders(sellerId: number) {
+  findBySeller(sellerId: number) {
     return this.orders.filter((o) => o.sellerId === sellerId);
   }
 
-  updateOrderStatus(id: number, status: string) {
+  update(id: number, updateOrderDto: UpdateOrderDto) {
     const order = this.orders.find((o) => o.id === id);
     if (!order) throw new NotFoundException(`Order with id ${id} not found`);
-    order.status = status;
+    order.status = (updateOrderDto as any).status;
     return order;
+  }
+
+  remove(id: number) {
+    const index = this.orders.findIndex((o) => o.id === id);
+    if (index === -1) throw new NotFoundException(`Order with id ${id} not found`);
+    this.orders.splice(index, 1);
+    return { message: `Order ${id} removed successfully` };
   }
 }
