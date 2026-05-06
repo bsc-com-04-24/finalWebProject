@@ -3,20 +3,14 @@ import { OrdersService } from './orders.service';
 
 @Controller('orders')
 export class OrdersController {
-constructor(private readonly ordersService: OrdersService) {}
+  constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
-  placeOrder(
-    @Body()
-    orderData: {
-      buyerId: number;
-      sellerId: number;
-      productId: number;
-      serviceIds?: number[];
-      location?: string;
-    },
-  ) {
-    return this.ordersService.placeOrder(orderData);
+  placeOrder(@Body('cartId') cartId: number) {
+    if (!cartId) {
+      throw new Error('cartId is required');
+    }
+    return this.ordersService.placeOrder(cartId);
   }
 
   @Get(':id')
@@ -42,4 +36,3 @@ constructor(private readonly ordersService: OrdersService) {}
     return this.ordersService.updateOrderStatus(Number(id), status);
   }
 }
-
