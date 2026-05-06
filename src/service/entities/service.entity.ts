@@ -1,1 +1,3 @@
-export class Service {}
+export class Service {
+    [x: string]: any;
+}
