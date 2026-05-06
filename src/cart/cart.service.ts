@@ -1,53 +1,52 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Cart } from './entities/cart.entity';
-import { UpdateCartItemDto } from './dto/update-cart-item.dto';
+
 @Injectable()
-export class CartService {
-    constructor(
-        @InjectRepository(Cart)
-        private cartRepository: Repository<Cart>,
+export class CartsService {
+  private carts: any[] = [
+    {
+      id: 1,
+      buyerId: 1,
+      items: [
+        { itemId: 101, type: 'product', price: 500, sellerId: 10, title: 'Phone' },
+        { itemId: 201, type: 'service', price: 100, sellerId: 10, time: '2pm', location: 'Lilongwe' },
+      ],
+    },
+  ];
 
-    ){}
-    async addToCart(itemData: Partial<Cart>){
-        const newItem = this.cartRepository.create(itemData);
-        return await this.cartRepository.save(newItem);
-    }
-    async getCart(){
-        const items = await this.cartRepository.find();
-        const total = items.reduce((sum,item) => sum + Number(item.totalPrice), 0);
-        return { items, total};
-    }
-    async updateCart(productId: number, itemCount: number){
-        const item = await this.cartRepository.findOne({ where:{productId}});
-        if (!item){
-            throw new Error('Item not found in cart');
-        }
-        item.itemCount = itemCount;
-        return await this.cartRepository.save(item);
-    }
-    async update(id: number,updateDto:UpdateCartItemDto){
-        const item = await this.cartRepository.findOneBy({ id });
-        if (!item){
-            throw new NotFoundException('Cart item #${id} not found');
-        }
-        Object.assign(item,updateDto);
-        return this.cartRepository.save(item);
-    }
+  createCart(buyerId: number) {
+    const newCart: any = {
+      id: this.carts.length + 1,
+      buyerId,
+      items: [],
+    };
+    this.carts.push(newCart);
+    return newCart;
+  }
 
-    async removeItem(productId: number){
-        const result = await this.cartRepository.delete({productId});
-        if (result.affected === 0){
-            throw new Error('Item not found');
-        }
-        return { message: 'Item removed successfully'};
-    }
-    async clearCart(){
-        await this.cartRepository.clear();
-        return { message:'Cart cleared'};
-    }
+  getCartByBuyerId(buyerId: number) {
+    const cart = this.carts.find((c) => c.buyerId === buyerId);
+    if (!cart) throw new NotFoundException(`Cart for buyer ${buyerId} not found`);
+    return cart;
+  }
+
+  addItemToCart(buyerId: number, item: { itemId: number; type: string; price: number; sellerId: number; title?: string; time?: string; location?: string }) {
+    const cart = this.carts.find((c) => c.buyerId === buyerId);
+    if (!cart) throw new NotFoundException(`Cart for buyer ${buyerId} not found`);
+    cart.items.push(item);
+    return cart;
+  }
+
+  removeItemFromCart(buyerId: number, itemId: number) {
+    const cart = this.carts.find((c) => c.buyerId === buyerId);
+    if (!cart) throw new NotFoundException(`Cart for buyer ${buyerId} not found`);
+    cart.items = cart.items.filter((i) => i.itemId !== itemId);
+    return cart;
+  }
+
+  clearCart(buyerId: number) {
+    const cart = this.carts.find((c) => c.buyerId === buyerId);
+    if (!cart) throw new NotFoundException(`Cart for buyer ${buyerId} not found`);
+    cart.items = [];
+    return cart;
+  }
 }
-
-
-

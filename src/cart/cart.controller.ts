@@ -1,47 +1,42 @@
-import { Controller, Get, Post, Body, Param, Delete, Patch, Put, ParseIntPipe } from '@nestjs/common';
-import { CartService } from './cart.service';
-import { CreateCartItemDto } from './dto/create-cart-item.dto';
-import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 
-@Controller('cart')
-export class CartController {
-    constructor(private readonly cartService: CartService){}
+import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
+import { CartsService } from './cart.service';
 
-    @Post()
-    async addToCart(@Body() createCartItemDto:CreateCartItemDto){
-        return await this.cartService.addToCart(createCartItemDto);
+@Controller('carts')
+export class CartsController {
+  constructor(private readonly cartsService: CartsService) {}
 
+  @Post()
+  createCart(@Body('buyerId') buyerId: number) {
+    if (!buyerId) {
+      throw new Error('buyerId is required');
     }
+    return this.cartsService.createCart(buyerId);
+  }
 
-    @Get()
-    async getCart(){
-        return await this.cartService.getCart();
-    }
+  @Get('buyer/:buyerId')
+  getCartByBuyerId(@Param('buyerId') buyerId: string) {
+    return this.cartsService.getCartByBuyerId(Number(buyerId));
+  }
 
-    @Put(':productId')
-    async updateitemCount(@Param('productId',ParseIntPipe) productId: number,@Body('itemCount',ParseIntPipe) itemCount: number,){
-        return await this.cartService.updateCart(productId,itemCount);
+  @Post('buyer/:buyerId/item')
+  addItemToCart(
+    @Param('buyerId') buyerId: string,
+    @Body() item: { itemId: number; type: string; price: number; sellerId: number; title?: string; time?: string; location?: string },
+  ) {
+    return this.cartsService.addItemToCart(Number(buyerId), item);
+  }
 
+  @Delete('buyer/:buyerId/item/:itemId')
+  removeItemFromCart(
+    @Param('buyerId') buyerId: string,
+    @Param('itemId') itemId: string,
+  ) {
+    return this.cartsService.removeItemFromCart(Number(buyerId), Number(itemId));
+  }
 
-    }
-
-    @Patch(':id')
-    update(@Param('id') id: string,@Body() updateDto:UpdateCartItemDto){
-        return this.cartService.update(+id,updateDto);
-    }
-
-    
-
-    @Delete(':productId')
-    async removeItem(@Param('productId',ParseIntPipe)productId: number){
-         return await this.cartService.removeItem(productId);
-    }
-
-    @Delete()
-    async clearCart(){
-        return await this.cartService.clearCart();
-    }
-
+  @Delete('buyer/:buyerId')
+  clearCart(@Param('buyerId') buyerId: string) {
+    return this.cartsService.clearCart(Number(buyerId));
+  }
 }
-
-
