@@ -1,42 +1,60 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Param,
+  Body,
+} from '@nestjs/common';
 
-import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
-import { CartsService } from './cart.service';
+import { CartService } from './cart.service';
 
-@Controller('carts')
-export class CartsController {
-  constructor(private readonly cartsService: CartsService) {}
+import { AddToCartDto } from './dto/add-to-cart.dto';
+import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 
+@Controller('cart')
+export class CartController {
+  constructor(
+    private readonly cartService: CartService,
+  ) {}
+
+  
+  @Get()
+  getCart() {
+    const fakeUser = { id: 1 } as any;
+
+    return this.cartService.getCart(fakeUser);
+  }
+
+  
   @Post()
-  createCart(@Body('buyerId') buyerId: number) {
-    if (!buyerId) {
-      throw new Error('buyerId is required');
-    }
-    return this.cartsService.createCart(buyerId);
+  addToCart(@Body() dto: AddToCartDto) {
+    const fakeUser = { id: 1 } as any;
+
+    return this.cartService.addToCart(dto, fakeUser);
   }
 
-  @Get('buyer/:buyerId')
-  getCartByBuyerId(@Param('buyerId') buyerId: string) {
-    return this.cartsService.getCartByBuyerId(Number(buyerId));
-  }
-
-  @Post('buyer/:buyerId/item')
-  addItemToCart(
-    @Param('buyerId') buyerId: string,
-    @Body() item: { itemId: number; type: string; price: number; sellerId: number; title?: string; time?: string; location?: string },
+  
+  @Patch(':id')
+  updateQuantity(
+    @Param('id') id: number,
+    @Body() dto: UpdateCartItemDto,
   ) {
-    return this.cartsService.addItemToCart(Number(buyerId), item);
+    return this.cartService.updateQuantity(+id, dto);
   }
 
-  @Delete('buyer/:buyerId/item/:itemId')
-  removeItemFromCart(
-    @Param('buyerId') buyerId: string,
-    @Param('itemId') itemId: string,
-  ) {
-    return this.cartsService.removeItemFromCart(Number(buyerId), Number(itemId));
+  
+  @Delete(':id')
+  removeItem(@Param('id') id: number) {
+    return this.cartService.removeItem(+id);
   }
 
-  @Delete('buyer/:buyerId')
-  clearCart(@Param('buyerId') buyerId: string) {
-    return this.cartsService.clearCart(Number(buyerId));
+  
+  @Delete()
+  clearCart() {
+    const fakeUser = { id: 1 } as any;
+
+    return this.cartService.clearCart(fakeUser);
   }
 }
