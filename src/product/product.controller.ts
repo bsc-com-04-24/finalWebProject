@@ -1,34 +1,35 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 
-@Controller('product')
+@Controller('api/v1/products')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productsService: ProductService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  create(@Body() createProductDto: any) {
+    return this.productsService.create(createProductDto);
   }
 
   @Get()
-  findAll() {
-    return this.productService.findAll();
+  findAll(@Query('sellerId') sellerId?: string) {
+    if (sellerId) {
+      return this.productsService.findBySeller(+sellerId);
+    }
+    return this.productsService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+    return this.productsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+  @Put(':id')
+  update(@Param('id') id: string, @Body() updateProductDto: any) {
+    return this.productsService.update(+id, updateProductDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.productService.remove(+id);
+    return this.productsService.remove(+id);
   }
 }
