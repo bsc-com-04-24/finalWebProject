@@ -1,13 +1,13 @@
-import { ProductsController } from './products.controller';
-import { ProductsService } from './products.service';
+import { ProductController } from './product.controller';
+import { ProductService } from './product.service';
 
-describe('ProductsController', () => {
-  let controller: ProductsController;
-  let service: ProductsService;
+describe('ProductController', () => {
+  let controller: ProductController;
+  let service: ProductService;
 
   beforeEach(() => {
-    service = new ProductsService();
-    controller = new ProductsController(service);
+    service = new ProductService();
+    controller = new ProductController(service);
   });
 
   it('should create a product', async () => {

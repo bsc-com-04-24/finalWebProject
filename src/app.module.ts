@@ -4,9 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module'; 
 import { User } from './user/entities/user.entity'; 
 import { CartModule } from './cart/cart.module';
-import { OrderModule } from './order/order.module';
-import { ProductModule } from './product/product.module';
-import { ServiceModule } from './service/service.module';
+import { OrdersModule } from './order/order.module';
+import { ProductsModule } from './product/product.module';
+import { ServicesModule } from './service/service.module';
  
 @Module({ 
   imports: [ 
@@ -26,7 +26,7 @@ import { ServiceModule } from './service/service.module';
         logging: true, 
       }), 
     }), 
-    UserModule, CartModule, OrderModule, ProductModule, ServiceModule 
+    UserModule, CartModule, OrdersModule, ProductsModule, ServicesModule 
   ], 
 }) 
 export class AppModule {} 

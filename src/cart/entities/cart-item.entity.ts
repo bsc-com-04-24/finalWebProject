@@ -5,7 +5,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 
-import { Cart } from './cart.entity';
+// import { Cart } from './cart.entity';
 import { Product } from '../../products/entities/product.entity';
 
 @Entity()
@@ -17,10 +17,10 @@ export class CartItem {
   quantity: number;
 
   // MANY ITEMS -> ONE CART
-  @ManyToOne(() => Cart, (cart) => cart.items, {
-    onDelete: 'CASCADE',
-  })
-  cart: Cart;
+  // @ManyToOne(() => Cart, (cart) => cart.items, {
+  //   onDelete: 'CASCADE',
+  // })
+  // cart: Cart;
 
   // EACH ITEM REFERENCES A PRODUCT
   @ManyToOne(() => Product, {

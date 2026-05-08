@@ -8,7 +8,7 @@ export class ProductService {
   private products: Product[] = [];
   private nextId = 1;
 
-  async create(createProductDto: CreateProductDto) {
+  create(createProductDto: CreateProductDto) {
     const product: Product = {
       id: this.nextId++,
       ...createProductDto,
@@ -20,11 +20,11 @@ export class ProductService {
     return product;
   }
 
-  async findAll() {
+  findAll() {
     return this.products;
   }
 
-  async findOne(id: number) {
+  findOne(id: number) {
     const product = this.products.find((p) => p.id === id);
     
     if (!product) {
@@ -34,19 +34,19 @@ export class ProductService {
     return product;
   }
 
-  async findBySeller(sellerId: number) {
+  findBySeller(sellerId: number) {
     return this.products.filter((p) => p.sellerId === sellerId);
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto) {
-    const product = await this.findOne(id);
+  update(id: number, updateProductDto: UpdateProductDto) {
+    const product = this.findOne(id);
     
     Object.assign(product, updateProductDto, { updatedAt: new Date() });
     return product;
   }
 
-  async remove(id: number) {
-    const product = await this.findOne(id);
+  remove(id: number) {
+    // const product = this.findOne(id);
     this.products = this.products.filter((p) => p.id !== id);
     return { message: `Product with ID ${id} has been deleted` };
   }

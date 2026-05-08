@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -29,11 +30,13 @@ export class OrderController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.orderService.findOne(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.orderService.update(+id, updateOrderDto);
   }
 
