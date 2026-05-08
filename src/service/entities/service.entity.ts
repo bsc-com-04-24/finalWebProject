@@ -1,3 +1,19 @@
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+
+@Entity('services')
 export class Service {
-    [x: string]: any;
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Column()
+  name!: string;
+
+  @Column()
+  description!: string;
+
+  @Column('decimal')
+  price!: number;
+
+  @Column()
+  sellerId!: number;
 }

@@ -1,34 +1,34 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ServiceService } from './service.service';
+import { Controller, Post, Put, Delete, Get, Param, Body } from '@nestjs/common';
+import { ServicesService } from './service.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 
-@Controller('service')
-export class ServiceController {
-  constructor(private readonly serviceService: ServiceService) {}
+@Controller('services')
+export class ServicesController {
+  constructor(private readonly servicesService: ServicesService) {}
 
   @Post()
-  create(@Body() createServiceDto: CreateServiceDto) {
-    return this.serviceService.create(createServiceDto);
+  createService(@Body() dto: CreateServiceDto) {
+    return this.servicesService.create(dto);
   }
 
-  @Get()
-  findAll() {
-    return this.serviceService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.serviceService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateServiceDto: UpdateServiceDto) {
-    return this.serviceService.update(+id, updateServiceDto);
+  @Put(':id')
+  updateService(@Param('id') id: string, @Body() dto: UpdateServiceDto) {
+    return this.servicesService.update(parseInt(id, 10), dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.serviceService.remove(+id);
+  deleteService(@Param('id') id: string) {
+    return this.servicesService.delete(parseInt(id, 10));
+  }
+
+  @Get(':id')
+  getServiceById(@Param('id') id: string) {
+    return this.servicesService.findById(parseInt(id, 10));
+  }
+
+  @Get()
+  getAllServices() {
+    return this.servicesService.findAll();
   }
 }
