@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CartController } from './cart.controller';
 import { CartService } from './cart.service';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Cart } from './entities/cart.entity';
 
 describe('CartController', () => {
   let controller: CartController;
@@ -8,7 +10,14 @@ describe('CartController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CartController],
-      providers: [CartService],
+      providers: [
+        CartService,
+        {
+          provide:
+           getRepositoryToken(Cart),
+           useValue:{},
+        },
+      ],
     }).compile();
 
     controller = module.get<CartController>(CartController);
@@ -18,3 +27,4 @@ describe('CartController', () => {
     expect(controller).toBeDefined();
   });
 });
+
