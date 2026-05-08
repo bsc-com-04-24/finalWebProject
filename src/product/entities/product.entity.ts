@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-export class Product {}
-=======
+
 export interface Product {
   id: number;
   name: string;
@@ -21,4 +19,4 @@ export enum ProductCategory {
   SPORTS = 'sports',
   OTHER = 'other',
 }
->>>>>>> products
+
