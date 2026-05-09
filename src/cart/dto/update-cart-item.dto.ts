@@ -1,6 +1,8 @@
-import { IsNumber } from 'class-validator';
+import { IsInt } from 'class-validator';       
+import { Type } from 'class-transformer';   
 
 export class UpdateCartItemDto {
-  @IsNumber()
-  quantity: number;
+
+  @IsInt()
+  quantity!: number;
 }

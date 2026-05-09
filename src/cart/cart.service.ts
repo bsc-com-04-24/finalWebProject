@@ -28,7 +28,7 @@ export class CartService {
     private productRepo: Repository<Product>,
   ) {}
 
-  
+  // GET USER CART
   async getCart(user: User) {
     let cart = await this.cartRepo.findOne({
       where: {
@@ -37,7 +37,7 @@ export class CartService {
       relations: ['items'],
     });
 
-    
+    // CREATE CART IF IT DOESN'T EXIST
     if (!cart) {
       cart = this.cartRepo.create({
         user,
@@ -50,7 +50,7 @@ export class CartService {
     return cart;
   }
 
-  
+  // ADD PRODUCT TO CART
   async addToCart(dto: AddToCartDto, user: User) {
     const cart = await this.getCart(user);
 
@@ -62,7 +62,7 @@ export class CartService {
       throw new NotFoundException('Product not found');
     }
 
-    
+    // CHECK IF PRODUCT ALREADY EXISTS IN CART
     const existingItem = cart.items.find(
       (item) => item.product.id === product.id,
     );
@@ -82,7 +82,7 @@ export class CartService {
     return this.cartItemRepo.save(cartItem);
   }
 
-  
+  // UPDATE CART ITEM QUANTITY
   async updateQuantity(
     itemId: number,
     dto: UpdateCartItemDto,
@@ -100,7 +100,7 @@ export class CartService {
     return this.cartItemRepo.save(item);
   }
 
-  
+  // REMOVE ITEM FROM CART
   async removeItem(itemId: number) {
     const item = await this.cartItemRepo.findOne({
       where: { id: itemId },
@@ -113,7 +113,7 @@ export class CartService {
     return this.cartItemRepo.remove(item);
   }
 
-  
+  // CLEAR ENTIRE CART
   async clearCart(user: User) {
     const cart = await this.getCart(user);
 
