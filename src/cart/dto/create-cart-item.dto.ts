@@ -1,18 +1,26 @@
-import { IsNumber, IsString, IsPositive } from "class-validator";
+import { IsNumber, IsOptional, Min } from "class-validator";
 export class CreateCartItemDto{
     @IsNumber()
-    productId!: number;
+    buyerId!: number;
 
-    @IsString()
-    productName!: string;
-
+    @IsOptional()
     @IsNumber()
-    @IsPositive()
-    totalPrice!: number;
+    productId?: number;
 
+
+    @IsOptional()
     @IsNumber()
-    @IsPositive()
-    itemCount!: number;
+    serviceId?: number;
+    
+    
+
+    @IsOptional()
+    @IsNumber()
+    @Min(1)
+    quantity?: number = 1;
+    
+    
 
 }
+
 

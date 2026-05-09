@@ -6,55 +6,46 @@ import {
   Delete,
   Param,
   Body,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import { CartService } from './cart.service';
 
-import { AddToCartDto } from './dto/add-to-cart.dto';
+import { CreateCartItemDto } from './dto/create-cart-item.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 
 @Controller('cart')
 export class CartController {
-  constructor(
-    private readonly cartService: CartService,
-  ) {}
+  constructor(private readonly cartService: CartService){}
 
-  
-  @Get()
-  getCart() {
-    const fakeUser = { id: 1 } as any;
-
-    return this.cartService.getCart(fakeUser);
+  @Get(':buyerId')
+  findByBuyerId(@Param('buyerId',ParseIntPipe) buyerId: number) {
+    return this.cartService.findByBuyerId(buyerId);
   }
 
-  
-  @Post()
-  addToCart(@Body() dto: AddToCartDto) {
-    const fakeUser = { id: 1 } as any;
-
-    return this.cartService.addToCart(dto, fakeUser);
+  @Post('items')
+  addItem(@Body() dto: CreateCartItemDto) {
+    return this.cartService.addItem(dto);
   }
 
-  
-  @Patch(':id')
-  updateQuantity(
-    @Param('id') id: number,
+  @Patch('items/:itemId')
+  updateItem(
+    @Param('itemId', ParseIntPipe) itemId: number,
     @Body() dto: UpdateCartItemDto,
-  ) {
-    return this.cartService.updateQuantity(+id, dto);
+  ){
+    return this.cartService.updateItem(itemId, dto);
   }
 
-  
-  @Delete(':id')
-  removeItem(@Param('id') id: number) {
-    return this.cartService.removeItem(+id);
+  @Delete('items/:itemId')
+  removeItem(@Param('itemId',ParseIntPipe) itemId: number){
+    return this.cartService.removeItem(itemId);
+
   }
 
-  
-  @Delete()
-  clearCart() {
-    const fakeUser = { id: 1 } as any;
-
-    return this.cartService.clearCart(fakeUser);
+  @Delete(':buyerId/clear')
+  clearCart(@Param('buyerId',ParseIntPipe) buyerId: number){
+    return this.cartService.clearCart(buyerId);
   }
 }
+
+

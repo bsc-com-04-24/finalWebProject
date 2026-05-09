@@ -1,30 +1,33 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column,
+  OneToOne,
+  OneToMany,
+  JoinColumn,
+  CreateDateColumn,
   ManyToOne,
+  Column,
 } from 'typeorm';
 
-import { Cart } from './cart.entity';
-import { Product } from '../../products/entities/product.entity';
+import { User } from '../../users/entities/user.entity';
+import { CartItem } from './cart-item.entity';
 
 @Entity()
-export class CartItem {
+export class Cart {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'buyerId'})
+  buyer!: User;
 
   @Column()
-  quantity: number;
+  buyerId!: number;
 
-  // MANY ITEMS -> ONE CART
-  @ManyToOne(() => Cart, (cart) => cart.items, {
-    onDelete: 'CASCADE',
-  })
-  cart: Cart;
+  @OneToMany(() => CartItem, item => item.cart,{ cascade:true})
+  items!:CartItem[];
 
-  // EACH ITEM REFERENCES A PRODUCT
-  @ManyToOne(() => Product, {
-    eager: true,
-  })
-  product: Product;
+  @CreateDateColumn()
+  createdAt!: Date;
 }
+
