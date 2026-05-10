@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { IsArray, IsNumber } from 'class-validator';
 
 export class CreateOrderDto {
@@ -12,3 +13,6 @@ export class CreateOrderDto {
   @IsNumber()
   totalAmount: number;
 }
+=======
+export class CreateOrderDto {}
+>>>>>>> origin/main

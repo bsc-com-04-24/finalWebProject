@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -47,3 +48,6 @@ export class Order {
   @CreateDateColumn()
   createdAt: Date;
 }
+=======
+export class Order {}
+>>>>>>> origin/main
