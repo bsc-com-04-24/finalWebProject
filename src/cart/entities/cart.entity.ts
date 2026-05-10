@@ -1,6 +1,15 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  OneToMany,
+  JoinColumn,
+  CreateDateColumn,
+  ManyToOne,
+  Column,
+} from 'typeorm';
 
-import {Entity, PrimaryGeneratedColumn, OneToOne,OneToMany,  JoinColumn,} from 'typeorm';
-import { User } from '../../user/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 import { CartItem } from './cart-item.entity';
 
 @Entity()
@@ -8,16 +17,17 @@ export class Cart {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  // ONE USER -> ONE CART
-  @OneToOne(() => User, (user) => user.cart, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
-  user!: User;
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'buyerId'})
+  buyer!: User;
 
-  // ONE CART -> MANY ITEMS
-  @OneToMany(() => CartItem, (item) => item.cart, {
-    cascade: true,
-  })
-  items: CartItem[];
+  @Column()
+  buyerId!: number;
+
+  @OneToMany(() => CartItem, item => item.cart,{ cascade:true})
+  items!:CartItem[];
+
+  @CreateDateColumn()
+  createdAt!: Date;
 }
+
