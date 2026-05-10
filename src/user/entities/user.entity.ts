@@ -30,6 +30,9 @@ export class User {
   })
   role!: UserRole;
 
+  // @OneToMany(() => Product, (product) => product.user)
+  // product!: Product[];
+
 }
   // SELLER RELATIONS
  /* @OneToMany(() => Product, (product) => product.user)
