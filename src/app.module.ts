@@ -8,6 +8,8 @@ import { User } from './users/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
+
+
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
@@ -32,5 +34,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   
 })
 export class AppModule {}
+
+
+
+import { OrdersModule } from './order/order.module';
+
+
+
+import { UserModule } from './user/user.module'; 
+
+ 
 
 

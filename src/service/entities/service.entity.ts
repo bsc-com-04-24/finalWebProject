@@ -5,3 +5,9 @@ export class Service {
     id!: number;
 }
 
+//TODO: add actual service fields
+
+
+
+
+
